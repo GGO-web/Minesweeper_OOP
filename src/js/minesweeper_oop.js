@@ -220,7 +220,7 @@ Minesweeper.prototype.set_columns_count = function(count_columns) {
    this.options.columns = count_columns;
 }
 
-// set states on the field(where the bombs)
+// set states on the field(near the bombs) filled by numbers
 Minesweeper.prototype.set_states = function() {
    for (let i = 1; i <= this.options.rows; ++i) {
       for (let j = 1; j <= this.options.columns; ++j) {
@@ -233,8 +233,9 @@ Minesweeper.prototype.set_states = function() {
 
          const cell_number = this.field[i][j].value;
          const cell = find_cell(i, j);
-         if (cell_number > 0 && cell)
+         if (cell_number > 0 && cell) {
             cell.innerText = cell_number;
+         }
       }
    }
 };
