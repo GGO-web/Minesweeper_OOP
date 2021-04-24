@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 // ==/> Class For Game Cell Start! </==
 class Cell {
@@ -8,10 +8,8 @@ class Cell {
       this.isVisited = false;
       this.value = 0;
    }
-};
+}
 // ==/>  Class For Game Cell End!  </==
-
-
 
 // ==/> Game Class Start! </==
 class Minesweeper {
@@ -36,7 +34,6 @@ class Minesweeper {
       };
       // for a start generating an easy level
       this.set_default_styles();
-
 
       this.set_field_size = () => {
          // generating the field cells
@@ -135,10 +132,9 @@ class Minesweeper {
 
       // ================================
       // ==/>  Event Listeners End!  </==
-   };
-};
+   }
+}
 // ==/>  Game Class End!  </==
-
 
 // generate random number from [0, range)
 function rand(range) {
@@ -180,22 +176,59 @@ function set_cell_state(row_index, column_index) {
    }
 }
 
+function visit_empty_cells(queue) {
+   while (queue.length > 0) {
+      const pick = queue.pop();
+      const [row_index, column_index] = [pick.row_index, pick.column_index];
+
+      this.field[row_index][column_index].isVisited = true;
+
+      for (let i = -1; i <= 1; ++i) {
+         for (let j = -1; j <= 1; ++j) {
+            if (
+               this.isUndefinedCell(row_index + i, column_index + j) ||
+               this.field[row_index + i][column_index + j].isVisited
+            )
+               continue;
+
+            if (
+               !this.field[row_index + i][column_index + j].isVisited &&
+               this.field[row_index + i][column_index + j].value == 0
+            ) {
+               this.field[row_index + i][column_index + j].isVisited = true;
+               open_cell.call(this, row_index + i, column_index + j);
+               queue.push({
+                  row_index: row_index + i,
+                  column_index: column_index + j,
+               });
+            } else if (
+               this.field[row_index][column_index].value == 0 &&
+               this.field[row_index + i][column_index + j].value > 0
+            ) {
+               this.field[row_index + i][column_index + j].isVisited = true;
+               open_cell.call(this, row_index + i, column_index + j);
+            }
+         }
+      }
+   }
+   return;
+}
+
 // Function for a  =|-> Game Over <-|=
-Minesweeper.prototype.gameOver = function() {
+Minesweeper.prototype.gameOver = function () {
    for (let i = 1; i <= this.options.rows; ++i) {
       for (let j = 1; j <= this.options.columns; ++j) {
          const cell = find_cell(i, j);
          cell.style.pointerEvents = "none";
          const cellIsBomb = this.field[i][j].isBomb;
-         if (cellIsBomb)
-            open_cell.call(this, i, j);
+         if (cellIsBomb) open_cell.call(this, i, j);
       }
    }
 
    alert("Game is over!");
 
    return false;
-}
+};
 
 // Function for a  =|-> Game Win <-|=
 Minesweeper.prototype.gameWin = function () {
@@ -206,28 +239,26 @@ Minesweeper.prototype.gameWin = function () {
 // ========================
 
 // set bombs count
-Minesweeper.prototype.set_bombs_count = function(count_bombs) {
+Minesweeper.prototype.set_bombs_count = function (count_bombs) {
    this.options.bombs = count_bombs;
-}
+};
 
 // set field rows
-Minesweeper.prototype.set_rows_count = function(count_rows) {
+Minesweeper.prototype.set_rows_count = function (count_rows) {
    this.options.rows = count_rows;
-}
+};
 
 // set field columns
-Minesweeper.prototype.set_columns_count = function(count_columns) {
+Minesweeper.prototype.set_columns_count = function (count_columns) {
    this.options.columns = count_columns;
-}
+};
 
 // set states on the field(near the bombs) filled by numbers
-Minesweeper.prototype.set_states = function() {
+Minesweeper.prototype.set_states = function () {
    for (let i = 1; i <= this.options.rows; ++i) {
       for (let j = 1; j <= this.options.columns; ++j) {
-         if (!this.field[i][j].isFlag)
-            set_cell_state.call(this, i, j);
-         if (this.field[i][j].isBomb)
-            continue;
+         if (!this.field[i][j].isFlag) set_cell_state.call(this, i, j);
+         if (this.field[i][j].isBomb) continue;
 
          this.field[i][j].value = this.count_bombs_on_area(i, j);
 
@@ -240,31 +271,52 @@ Minesweeper.prototype.set_states = function() {
    }
 };
 
-
 // ==/> First click settings </==
 // open cells around cell if this is the first click
 Minesweeper.prototype.open_cells_on_area = function (row_index, column_index) {
    for (let i = -1; i <= 1; ++i) {
       for (let j = -1; j <= 1; ++j) {
          const cellIsFlag = this.field[row_index + i][column_index + j].isFlag;
-         if (!this.isUndefinedCell(row_index + i, column_index + j) && !cellIsFlag) {
+         if (
+            !this.isUndefinedCell(row_index + i, column_index + j) &&
+            !cellIsFlag
+         ) {
             open_cell.call(this, row_index + i, column_index + j);
          }
       }
    }
 };
 // set visited state around cell if this is the first click
-Minesweeper.prototype.set_states_on_area = function(row_index, column_index) {
+Minesweeper.prototype.set_states_on_area = function (row_index, column_index) {
    for (let i = -1; i <= 1; ++i) {
       for (let j = -1; j <= 1; ++j) {
          const cellIsFlag = this.field[row_index + i][column_index + j].isFlag;
-         if (!this.isUndefinedCell(row_index + i, column_index + j) && !cellIsFlag) {
+         if (
+            !this.isUndefinedCell(row_index + i, column_index + j) &&
+            !cellIsFlag
+         ) {
             this.field[row_index + i][column_index + j].isVisited = true;
          }
       }
    }
 };
-
+// remove visited state around cell if this is the first click
+Minesweeper.prototype.remove_states_on_area = function (
+   row_index,
+   column_index
+) {
+   for (let i = -1; i <= 1; ++i) {
+      for (let j = -1; j <= 1; ++j) {
+         const cellIsFlag = this.field[row_index + i][column_index + j].isFlag;
+         if (
+            !this.isUndefinedCell(row_index + i, column_index + j) &&
+            !cellIsFlag
+         ) {
+            this.field[row_index + i][column_index + j].isVisited = false;
+         }
+      }
+   }
+};
 
 // ========================
 // ==/>  Setters End!  </==
@@ -273,26 +325,25 @@ Minesweeper.prototype.set_states_on_area = function(row_index, column_index) {
 // ==================================
 
 // Check if the cell is undefined
-Minesweeper.prototype.isUndefinedCell = function(row_index, column_index) {
+Minesweeper.prototype.isUndefinedCell = function (row_index, column_index) {
    if (row_index > this.options.rows || row_index < 1) return true;
    if (column_index > this.options.columns || column_index < 1) return true;
    return false;
 };
 
 // Check if the cell is undefined
-Minesweeper.prototype.isGameWin = function() {
+Minesweeper.prototype.isGameWin = function () {
    let countVisited = 0;
    for (let i = 1; i <= this.options.rows; ++i) {
       for (let j = 1; j <= this.options.columns; ++j) {
-         const isCorrectFlag = (this.field[i][j].isFlag) && (this.field[i][j].isBomb);
-         if (this.field[i][j].isVisited || isCorrectFlag)
-            countVisited++;
+         const isCorrectFlag =
+            this.field[i][j].isFlag && this.field[i][j].isBomb;
+         if (this.field[i][j].isVisited || isCorrectFlag) countVisited++;
       }
    }
 
    const keepCount = this.options.rows * this.options.columns - countVisited;
-   if (keepCount <= 2)
-      return true;
+   if (keepCount <= 2) return true;
 
    return false;
 };
@@ -304,40 +355,38 @@ Minesweeper.prototype.isGameWin = function() {
 // =============================
 
 // resize the game field
-Minesweeper.prototype.resize = function(rows, columns, bombs) {
+Minesweeper.prototype.resize = function (rows, columns, bombs) {
    this.set_bombs_count(bombs);
    this.set_rows_count(rows);
    this.set_columns_count(columns);
 
    this.set_field_size();
-}
+};
 
 // Count the number of bombs around the cell
-Minesweeper.prototype.count_bombs_on_area = function(row_index, column_index) {
+Minesweeper.prototype.count_bombs_on_area = function (row_index, column_index) {
    let count_bombs = 0;
    for (let i = -1; i <= 1; ++i) {
       for (let j = -1; j <= 1; ++j) {
-         if (this.field[row_index + i][column_index + j].isBomb)
-            count_bombs++;
+         if (this.field[row_index + i][column_index + j].isBomb) count_bombs++;
       }
    }
    return count_bombs;
 };
 
 // Count the number of flags around the cell
-Minesweeper.prototype.count_flags_on_area = function(row_index, column_index) {
+Minesweeper.prototype.count_flags_on_area = function (row_index, column_index) {
    let count_flags = 0;
    for (let i = -1; i <= 1; ++i) {
       for (let j = -1; j <= 1; ++j) {
-         if (this.field[row_index + i][column_index + j].isFlag)
-            count_flags++;
+         if (this.field[row_index + i][column_index + j].isFlag) count_flags++;
       }
    }
    return count_flags;
 };
 
 // generate bombs
-Minesweeper.prototype.generate_bombs = function() {
+Minesweeper.prototype.generate_bombs = function () {
    for (let i = 0; i < this.options.bombs; i++) {
       // randomly generate a row and a column of a bomb
       let row = rand(this.options.rows) + 1;
@@ -357,7 +406,7 @@ Minesweeper.prototype.generate_bombs = function() {
 };
 
 // mouse left click
-Minesweeper.prototype.click_left = function(row_index, column_index) {
+Minesweeper.prototype.click_left = function (row_index, column_index) {
    // click occurred outside the field
    if (this.isUndefinedCell(row_index, column_index)) {
       return;
@@ -386,27 +435,53 @@ Minesweeper.prototype.click_left = function(row_index, column_index) {
       // game start call
       this.getStarted();
 
+      // remove the visited position around the clicked cell after the field is generated
+      this.remove_states_on_area(row_index, column_index);
       // open cells around clicked cell
       this.open_cells_on_area(row_index, column_index);
 
+      // add empty cells to the queue located around the clicked cell
+      const queue = new Array();
+      for (let i = -1; i <= 1; ++i) {
+         for (let j = -1; j <= 1; ++j) {
+            if (this.isUndefinedCell(row_index + i, column_index + j)) continue;
+            if (
+               !this.field[row_index + i][column_index + j].isVisited &&
+               this.field[row_index + i][column_index + j].value == 0
+            ) {
+               queue.push({
+                  row_index: row_index + i,
+                  column_index: column_index + j,
+               });
+            }
+         }
+      }
+
+      visit_empty_cells.call(this, queue);
+
       this.isStarted = true;
-   }
-   else {
+   } else {
       // otherwise you click on a good field
       // the state of this cell is visited
+      // console.log(this.field[row_index][column_index]);
+      if (this.field[row_index][column_index].value == 0) {
+         const queue = new Array();
+         queue.push({ row_index, column_index });
+         visit_empty_cells.call(this, queue);
+      }
+
       this.field[row_index][column_index].isVisited = true;
       open_cell.call(this, row_index, column_index);
    }
 
    // check if it's a game win
-   if (this.isGameWin())
-      this.gameWin();
+   if (this.isGameWin()) this.gameWin();
 
    return;
 };
 
 // mouse right click
-Minesweeper.prototype.click_right = function(row_index, column_index) {
+Minesweeper.prototype.click_right = function (row_index, column_index) {
    // click occurred outside the field
    if (this.isUndefinedCell(row_index, column_index)) return;
 
@@ -422,14 +497,18 @@ Minesweeper.prototype.click_right = function(row_index, column_index) {
       this.field[row_index][column_index].isFlag = false;
    }
 
+   // check if it's a game win
+   if (this.isGameWin()) this.gameWin();
+
    return;
 };
 
 // mouse roller click
-Minesweeper.prototype.wheel_click = function(row_index, column_index) {
+Minesweeper.prototype.wheel_click = function (row_index, column_index) {
    const isAllowed =
       this.count_flags_on_area(row_index, column_index) >=
       this.field[row_index][column_index].value;
+
    if (this.field[row_index][column_index].isVisited && isAllowed) {
       for (let i = -1; i <= 1; ++i) {
          for (let j = -1; j <= 1; ++j) {
@@ -440,7 +519,7 @@ Minesweeper.prototype.wheel_click = function(row_index, column_index) {
 };
 
 // game start function
-Minesweeper.prototype.getStarted = function() {
+Minesweeper.prototype.getStarted = function () {
    this.generate_bombs();
    this.set_states();
    return this;
