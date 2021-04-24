@@ -266,6 +266,7 @@ Minesweeper.prototype.set_states = function () {
          const cell = find_cell(i, j);
          if (cell_number > 0 && cell) {
             cell.innerText = cell_number;
+            cell.style.padding = "0";
          }
       }
    }
