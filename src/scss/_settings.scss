@@ -1,0 +1,145 @@
+html {
+  box-sizing: border-box;
+  min-height: 100%;
+}
+
+body {
+  position: relative;
+  height: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+nav, footer, header, aside {
+   display: block;
+}
+
+input, button, textarea {
+   font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+  display: inline-block;
+  background: none;
+  line-height: inherit;
+  color: inherit;
+  border: none;
+}
+
+input {
+  line-height: inherit;
+  border: none;
+}
+
+img {
+  vertical-align: middle;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+input::placeholder {
+  color: inherit;
+  background-color: inherit;
+}
+
+ul, ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+polyline, svg path {
+  fill: inherit;
+  stroke: inherit;
+}
+
+address {
+  font-style: normal;
+}
+
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
+}
+
+button.focus-visible, a.focus-visible, input.focus-visible {
+  outline: 2px solid #000;
+}
+
+.site-container {
+  overflow: hidden;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+.hide-scroll {
+  overflow: hidden;
+}
+
+.for-mobile {
+  display: none;
+  @include tablet {
+    display: block;
+  }
+}
+
+.for-desktop {
+  display: none;
+  @include desktop {
+    display: block;
+  }
+}
+
+.visually-hidden {
+   overflow: hidden;
+   position: absolute;
+   width: 1px;
+   height: 1px;
+   margin: -1px;
+   padding: 0;
+   border: 0;
+   clip: rect(0 0 0 0);
+}
+
+body {
+   height: 100%;
+   background: linear-gradient(-45deg, #f0efeb 0%, #edf6f9 100%);
+   font-family: "Ubuntu", sans-serif;
+   font-size: 16px;
+   line-height: 1.2;
+   font-weight: 400;
+   color: #000;
+   margin: 0;
+   background-color: #fff;
+   @include desktop {
+      overflow: auto !important;
+   }
+}
+
+.container {
+  --content-offset: 20px;
+  max-width: calc(1368px + 2 * var(--content-offset));
+  margin: 0 auto;
+  padding: 0 var(--content-offset);
+}
+
+// ==!> Custom burger styles <!==
+.burger {
+  --burger-width: 20px;
+  --burger-height: 14px;
+  --burger-line-height: 2px;
+  --burger-color: #fff;
+
+  @include burger;
+}
+// ==!> Custom burger styles <!==

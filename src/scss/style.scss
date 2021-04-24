@@ -1,0 +1,11 @@
+@import "vars";
+@import "mixins";
+@import "fonts";
+@import "settings";
+
+
+// ==!> Site Components <!==
+@import "./components/header";
+@import "./components/main";
+@import "./components/footer";
+// ==!> Site Components <!==

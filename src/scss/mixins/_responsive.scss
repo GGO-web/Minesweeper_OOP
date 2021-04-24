@@ -1,0 +1,18 @@
+// ==!> Make a responsive parameter <!==
+@mixin responsiveP($parameter, $pcSize, $mobSize, $maxSize, $minSize) {
+   $addSize: $pcSize - $mobSize;
+   $maxWidth: $maxSize - $minSize;
+   // змінюємо параметр в інтервалі від $minSize до $maxSize
+
+   // залишаєм десктопний параметер на ширині більше $maxSize
+   @media (min-width: #{$maxSize + px}){
+      #{$parameter}: #{$pcSize + px};
+   }
+   @media (max-width: #{$maxSize + px}) and (min-width: #{$minSize + px}){
+      #{$parameter}: calc(#{$mobSize + px} + #{$addSize} * ((100vw - #{$minSize + px}) / #{$maxWidth}));
+   }
+   // залишаєм мобільний параметер на ширині менше $minSize
+   @media (max-width: #{$minSize + px}){
+      #{$parameter}: #{$mobSize + px};
+   }
+}
