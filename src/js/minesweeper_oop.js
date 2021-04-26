@@ -20,10 +20,12 @@ class Minesweeper {
          columns: 9,
          bombs: 10,
          fieldCell: "field-cell",
+         refreshButton: ".refresh-button",
       };
 
       this.options = Object.assign(optionsDefault, options);
       this.game = document.querySelector(selector);
+      this.refreshButton = document.querySelector(this.options.refreshButton);
 
       // game states, which mean if the game has (started) or (ended)
       (this.isStarted = false), (this.isOver = false);
@@ -155,8 +157,35 @@ class Minesweeper {
          }
       });
 
+      // refresh game listener
+      if (this.refreshButton)
+         this.refreshButton.addEventListener("click", () => {
+            this.refresh();
+            this.onRefresh();
+         });
+
       // ================================
       // ==/>  Event Listeners End!  </==
+   }
+   // custom events
+   onRefresh() {
+      const event = new CustomEvent("refresh", {});
+      window.dispatchEvent(event);
+   }
+
+   onGameStart() {
+      const event = new CustomEvent("gameStart", {});
+      window.dispatchEvent(event);
+   }
+
+   onGameOver() {
+      const event = new CustomEvent("gameOver", {});
+      window.dispatchEvent(event);
+   }
+
+   onGameWin() {
+      const event = new CustomEvent("gameWin", {});
+      window.dispatchEvent(event);
    }
 }
 // ==/>  Game Class End!  </==
@@ -251,6 +280,7 @@ Minesweeper.prototype.gameOver = function () {
    }
 
    alert("Game is over!");
+   this.onGameOver();
 
    return false;
 };
@@ -258,6 +288,7 @@ Minesweeper.prototype.gameOver = function () {
 // Function for a  =|-> Game Win <-|=
 Minesweeper.prototype.gameWin = function () {
    alert("Congratulations, you really are a sapper!");
+   this.onGameWin();
 };
 
 // ==/> Setters Start! </==
@@ -486,6 +517,7 @@ Minesweeper.prototype.click_left = function (row_index, column_index) {
       visit_empty_cells.call(this, queue);
 
       this.isStarted = true;
+      this.onGameStart(); // init game start event
    } else {
       // otherwise you click on a good field
       // the state of this cell is visited
@@ -550,5 +582,16 @@ Minesweeper.prototype.getStarted = function () {
    this.set_states();
    return this;
 };
+
+// game refresh function
+Minesweeper.prototype.refresh = function () {
+   // game states, which mean if the game has (started) or (ended)
+   (this.isStarted = false), (this.isOver = false);
+   this.field = [[]]; // init empty field
+
+   this.set_default_styles();
+   this.set_field_size();
+};
+
 // =============================
 // ==/>  Game Methods End!  </==
