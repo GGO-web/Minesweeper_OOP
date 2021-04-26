@@ -2,7 +2,7 @@
    // @include responsiveP(width, 500, 380, 1368, 576);
    // @include responsiveP(width, 380, 280, 576, 320);
    width: 100%;
-   max-width: 700px;
+   max-width: calc((70px + 10px) * var(--columns-count) - 10px);
    @include responsiveP(grid-gap, 10, 5, 576, 480);
    display: grid;
    justify-content: center;

@@ -31,6 +31,14 @@ class Minesweeper {
 
       this.set_default_styles = () => {
          this.game.classList.add("minesweeper-field");
+         document.documentElement.style.setProperty(
+            "--columns-count",
+            this.options.columns
+         );
+         document.documentElement.style.setProperty(
+            "--rows-count",
+            this.options.rows
+         );
       };
       // for a start generating an easy level
       this.set_default_styles();
@@ -101,7 +109,7 @@ class Minesweeper {
          return false;
       });
 
-      // listeners for wheel-click
+      // listeners for wheel-click (open the cells around clicked cell if possible)
       this.game.addEventListener("mousedown", (event) => {
          event.preventDefault();
 
@@ -128,6 +136,23 @@ class Minesweeper {
          }
 
          return false;
+      });
+      // listeners for mobile double click (open the cells around clicked cell if possible)
+      this.game.addEventListener("dblclick", (event) => {
+         event.preventDefault();
+
+         const targetCell = event.target;
+         // check if clicked in the field cell
+         if (
+            targetCell &&
+            targetCell.classList.contains(this.options.fieldCell)
+         ) {
+            const [row, column] = [
+               ...targetCell.dataset.cell.split(" ").map((e) => parseInt(e)),
+            ];
+
+            this.wheel_click(row, column);
+         }
       });
 
       // ================================
