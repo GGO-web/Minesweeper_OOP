@@ -77,6 +77,8 @@ button.focus-visible, a.focus-visible, input.focus-visible {
 .site-container {
    overflow: hidden;
    position: relative;
+   height: 100vh;
+   min-height: 500px;
 }
 
 .is-hidden {
