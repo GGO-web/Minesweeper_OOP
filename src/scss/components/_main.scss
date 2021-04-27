@@ -1,3 +1,8 @@
+.main {
+   position: relative;
+   z-index: 1;
+}
+
 .minesweeper-field {
    // @include responsiveP(width, 500, 380, 1368, 576);
    // @include responsiveP(width, 380, 280, 576, 320);
@@ -15,8 +20,6 @@
 
 .minesweeper-field .field-cell {
    --shadow-bottom: 4px;
-   // @include responsiveP(width, 50, 30, 576, 320);
-   // @include responsiveP(height, 50, 30, 576, 320);
    min-width: 100%;
 	height: 100%;
    padding: 50% 0;

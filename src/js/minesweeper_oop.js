@@ -161,30 +161,30 @@ class Minesweeper {
       if (this.refreshButton)
          this.refreshButton.addEventListener("click", () => {
             this.refresh();
-            this.onRefresh();
+            this.onGameRefresh();
          });
 
       // ================================
       // ==/>  Event Listeners End!  </==
    }
    // custom events
-   onRefresh() {
-      const event = new CustomEvent("refresh", {});
+   onGameRefresh() {
+      const event = new CustomEvent("MS_GameRefresh", {});
       window.dispatchEvent(event);
    }
 
    onGameStart() {
-      const event = new CustomEvent("gameStart", {});
+      const event = new CustomEvent("MS_GameStart", {});
       window.dispatchEvent(event);
    }
 
    onGameOver() {
-      const event = new CustomEvent("gameOver", {});
+      const event = new CustomEvent("MS_GameOver", {});
       window.dispatchEvent(event);
    }
 
    onGameWin() {
-      const event = new CustomEvent("gameWin", {});
+      const event = new CustomEvent("MS_GameWin", {});
       window.dispatchEvent(event);
    }
 }

@@ -13,30 +13,34 @@ class Timer {
       this.timerMinutes = document.querySelector(".timer__minutes");
       this.timerSeconds = document.querySelector(".timer__seconds");
       this.interval = null;
+
+      this.minutes = 0;
+      this.seconds = 1;
    }
    start() {
-      let minutes = 0, seconds = 1;
       this.interval = setInterval(() => {
-         if (seconds > 59) {
-            minutes++;
-            seconds %= 60;
+         if (this.seconds > 59) {
+            this.minutes++;
+            this.seconds %= 60;
          }
-         minutes %= 60;
+         this.minutes %= 60;
 
-         if (minutes <= 9) {
-            this.timerMinutes.innerHTML = "0" + minutes;
-         } else this.timerMinutes.innerHTML = minutes;
-         if (seconds <= 9) {
-            this.timerSeconds.innerHTML = "0" + seconds;
-         } else this.timerSeconds.innerHTML = seconds;
+         if (this.minutes <= 9) {
+            this.timerMinutes.innerHTML = "0" + this.minutes;
+         } else this.timerMinutes.innerHTML = this.minutes;
+         if (this.seconds <= 9) {
+            this.timerSeconds.innerHTML = "0" + this.seconds;
+         } else this.timerSeconds.innerHTML = this.seconds;
 
-         seconds++;
+         this.seconds++;
       }, 1000);
    }
    clear() {
       clearInterval(this.interval);
       this.timerMinutes.innerHTML = "00";
       this.timerSeconds.innerHTML = "00";
+      this.minutes = 0;
+      this.seconds = 1;
    }
    stop() {
       clearInterval(this.interval);
@@ -46,17 +50,18 @@ class Timer {
 const timer = new Timer();
 // timer.start();
 
-window.addEventListener("refresh", function () {
+window.addEventListener("MS_GameRefresh", function () {
    timer.clear();
 });
 
-window.addEventListener("gameStart", function () {
+window.addEventListener("MS_GameStart", function () {
    timer.start();
 });
 
-window.addEventListener("gameWin", function () {
+window.addEventListener("MS_GameWin", function () {
    timer.stop();
 });
-window.addEventListener("gameOver", function () {
+
+window.addEventListener("MS_GameOver", function () {
    timer.stop();
 });
