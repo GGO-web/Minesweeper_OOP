@@ -11,3 +11,11 @@ settingsButton.addEventListener("click", () => {
    else if (game.isStarted && !game.isEnded && !game.isOver)
       timer.start();
 });
+
+// click on overlay and close setting menu event
+window.addEventListener("click", function (event) {
+   const targetELement = event.target;
+   if (targetELement && targetELement.classList.contains("has-overlay")) {
+      settingsButton.click();
+   }
+});

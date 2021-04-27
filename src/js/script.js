@@ -168,5 +168,3 @@ window.addEventListener("MS_GameWin", function () {
 window.addEventListener("MS_GameOver", function () {
    timer.stop();
 });
-
-
