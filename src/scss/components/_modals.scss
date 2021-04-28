@@ -1,0 +1,51 @@
+.modal {
+   @include responsiveP(font-size, 24, 18, 576, 320);
+   visibility: hidden;
+   position: fixed;
+   z-index: 2;
+   top: 50%;
+   left: 50%;
+   width: 500px;
+   max-width: calc(100% - 20px);
+   font-family: "Satisfy", cursive;
+   color: var(--color-primary);
+   text-align: right;
+   padding: 20px;
+   border-radius: 20px;
+   transition: visibility 0.5s ease-in-out,
+               transform 0.5s ease-in-out;
+   transform: translate(-50%, -50%) scale(0);
+   background-color: var(--color-light-back);
+   &__title {
+      color: var(--color-secondary);
+      text-align: center;
+      margin: 0 0 20px;
+   }
+   &__button {
+      @include responsiveP(font-size, 18, 16, 576, 320);
+      box-shadow: 2px 4px 0px var(--shadow-color);
+      font-size: 18px;
+      line-height: 100%;
+      color: var(--color-light-back);
+      padding: 10px;
+      border-radius: 10px;
+      transition: transform 0.2s ease-in-out,
+                  box-shadow 0.2s ease-in-out;
+      background-color: var(--color-light-primary);
+      &:active {
+         box-shadow: 0px 0px 0px var(--shadow-color);
+         transform: translate(2px, 4px);
+      }
+   }
+   &.is-showed {
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+   }
+   @media (max-width: 320px) {
+      padding: 10px;
+   }
+}
+
+.game-over__title {
+   color: crimson;
+}

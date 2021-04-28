@@ -1,9 +1,13 @@
 .header {
-   position: relative;
+   position: fixed;
+   top: 0;
+   left: 0;
+   right: 0;
    z-index: 10;
    min-height: 70px;
    padding: 10px 0;
    background-color: var(--color-light-primary);
+   box-shadow: 0 0 5px var(--shadow-color);
    &__inner {
       display: flex;
       justify-content: space-between;

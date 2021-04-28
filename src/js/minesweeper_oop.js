@@ -275,7 +275,7 @@ Minesweeper.prototype.gameOver = function () {
    this.locking();
    this.show_all_bombs();
 
-   alert("Game is over!");
+   // alert("Game is over!");
    this.onGameOver();
 
    return false;
@@ -286,7 +286,8 @@ Minesweeper.prototype.gameWin = function () {
    this.isEnded = true;
    this.locking();
 
-   alert("Congratulations, you really are a sapper!");
+   // alert("Congratulations, you really are a sapper!");
+
    this.onGameWin();
 };
 
@@ -389,17 +390,27 @@ Minesweeper.prototype.isUndefinedCell = function (row_index, column_index) {
 
 // Check if the cell is undefined
 Minesweeper.prototype.isGameWin = function () {
-   let countVisited = 0;
+   let countVisited = 0,
+      noBombsCount = 0;
    for (let i = 1; i <= this.options.rows; ++i) {
       for (let j = 1; j <= this.options.columns; ++j) {
          const isCorrectFlag =
             this.field[i][j].isFlag && this.field[i][j].isBomb;
-         if (this.field[i][j].isVisited || isCorrectFlag) countVisited++;
+         if (this.field[i][j].isVisited || isCorrectFlag)
+            countVisited++;
+         if (this.field[i][j].isVisited && !this.field[i][j].isBomb)
+            noBombsCount++;
       }
    }
 
-   const keepCount = this.options.rows * this.options.columns - countVisited;
-   if (keepCount <= 2) return true;
+   let keepCount = this.options.rows * this.options.columns - noBombsCount;
+   if (keepCount == this.options.bombs) {
+      return true;
+   }
+
+   keepCount = this.options.rows * this.options.columns - countVisited;
+   if (keepCount <= 2)
+      return true;
 
    return false;
 };
@@ -554,8 +565,7 @@ Minesweeper.prototype.click_right = function (row_index, column_index) {
    }
 
    // check if it's a game win
-   if (this.isGameWin())
-      this.gameWin();
+   if (this.isGameWin()) this.gameWin();
 
    return;
 };
@@ -598,6 +608,7 @@ Minesweeper.prototype.locking = function () {
       for (let j = 1; j <= this.options.columns; ++j) {
          const cell = find_cell(i, j);
          cell.style.pointerEvents = "none";
+         cell.tabIndex = "-1";
       }
    }
 };
@@ -608,9 +619,9 @@ Minesweeper.prototype.unlocking = function () {
       for (let j = 1; j <= this.options.columns; ++j) {
          const cell = find_cell(i, j);
          cell.style.pointerEvents = null;
+         cell.tabIndex = null;
          const cellIsBomb = this.field[i][j].isBomb;
-         if (cellIsBomb)
-            open_cell.call(this, i, j);
+         if (cellIsBomb) open_cell.call(this, i, j);
       }
    }
 };
@@ -620,12 +631,10 @@ Minesweeper.prototype.show_all_bombs = function () {
    for (let i = 1; i <= this.options.rows; ++i) {
       for (let j = 1; j <= this.options.columns; ++j) {
          const cellIsBomb = this.field[i][j].isBomb;
-         if (cellIsBomb)
-            open_cell.call(this, i, j);
+         if (cellIsBomb) open_cell.call(this, i, j);
       }
    }
 };
-
 
 // =============================
 // ==/>  Game Methods End!  </==

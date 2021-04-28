@@ -42,6 +42,12 @@
       display: block !important;
    }
 }
+.noUi-tooltip {
+    display: none;
+}
+.noUi-active .noUi-tooltip {
+    display: block;
+}
 
 .noUi-horizontal .noUi-handle {
    top: 0;

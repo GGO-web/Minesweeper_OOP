@@ -132,7 +132,13 @@ const setGameSettings = () => {
 
    game.resize(rows, columns, bombs);
    game.refresh();
-   rangeBombsSlider.noUiSlider.set([null, bombsMaxCount()]);
+   rangeBombsSlider.noUiSlider.updateOptions({
+      range: {
+         min: 10,
+         max: bombsMaxCount(),
+      },
+   });
+   rangeBombsSlider.querySelector(".noUi-tooltip").style.display = "none";
 };
 
 rangeSliders.forEach((rangeSlider) => {
@@ -144,10 +150,17 @@ rangeSliders.forEach((rangeSlider) => {
       rangeSlider.noUiSlider.tooltips = true;
    });
 
+   let previousValue = rangeSlider.noUiSlider.get();
    rangeSlider.noUiSlider.on("change", function () {
       noUiTooltip = rangeSlider.querySelector(".noUi-tooltip");
       noUiTooltip.style.display = "none";
-      setGameSettings();
+
+      const currentValue = rangeSlider.noUiSlider.get();
+      if (previousValue != currentValue) {
+         timer.clear();
+         setGameSettings();
+      }
+      previousValue = currentValue;
    });
 });
 
@@ -162,9 +175,11 @@ window.addEventListener("MS_GameStart", function () {
 });
 
 window.addEventListener("MS_GameWin", function () {
+   toggleGameWinModal();
    timer.stop();
 });
 
 window.addEventListener("MS_GameOver", function () {
+   toggleGameOverModal();
    timer.stop();
 });
