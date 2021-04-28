@@ -20,17 +20,27 @@ class Minesweeper {
          columns: 9,
          bombs: 10,
          fieldCell: "field-cell",
+         refreshButton: ".refresh-button",
       };
 
       this.options = Object.assign(optionsDefault, options);
       this.game = document.querySelector(selector);
+      this.refreshButton = document.querySelector(this.options.refreshButton);
 
-      // game states, which mean if the game has (started) or (ended)
-      (this.isStarted = false), (this.isOver = false);
+      // game states, which mean if the game has (started), (ended) or (over)
+      (this.isStarted = false), (this.isEnded = false), (this.isOver = false);
       this.field = [[]]; // init empty field
 
       this.set_default_styles = () => {
          this.game.classList.add("minesweeper-field");
+         document.documentElement.style.setProperty(
+            "--columns-count",
+            this.options.columns
+         );
+         document.documentElement.style.setProperty(
+            "--rows-count",
+            this.options.rows
+         );
       };
       // for a start generating an easy level
       this.set_default_styles();
@@ -101,7 +111,7 @@ class Minesweeper {
          return false;
       });
 
-      // listeners for wheel-click
+      // listeners for wheel-click (open the cells around clicked cell if possible)
       this.game.addEventListener("mousedown", (event) => {
          event.preventDefault();
 
@@ -129,9 +139,53 @@ class Minesweeper {
 
          return false;
       });
+      // listeners for mobile double click (open the cells around clicked cell if possible)
+      this.game.addEventListener("dblclick", (event) => {
+         event.preventDefault();
+
+         const targetCell = event.target;
+         // check if clicked in the field cell
+         if (
+            targetCell &&
+            targetCell.classList.contains(this.options.fieldCell)
+         ) {
+            const [row, column] = [
+               ...targetCell.dataset.cell.split(" ").map((e) => parseInt(e)),
+            ];
+
+            this.wheel_click(row, column);
+         }
+      });
+
+      // refresh game listener
+      if (this.refreshButton)
+         this.refreshButton.addEventListener("click", () => {
+            this.refresh();
+            this.onGameRefresh();
+         });
 
       // ================================
       // ==/>  Event Listeners End!  </==
+   }
+   // custom events
+   onGameRefresh() {
+      const event = new CustomEvent("MS_GameRefresh", {});
+      window.dispatchEvent(event);
+   }
+
+   onGameStart() {
+      const event = new CustomEvent("MS_GameStart", {});
+      window.dispatchEvent(event);
+   }
+
+   onGameOver() {
+      const event = new CustomEvent("MS_GameOver", {});
+      window.dispatchEvent(event);
+   }
+
+   onGameWin() {
+      const event = new CustomEvent("MS_GameWin", {});
+      window.dispatchEvent(event);
    }
 }
 // ==/>  Game Class End!  </==
@@ -216,23 +270,25 @@ function visit_empty_cells(queue) {
 
 // Function for a  =|-> Game Over <-|=
 Minesweeper.prototype.gameOver = function () {
-   for (let i = 1; i <= this.options.rows; ++i) {
-      for (let j = 1; j <= this.options.columns; ++j) {
-         const cell = find_cell(i, j);
-         cell.style.pointerEvents = "none";
-         const cellIsBomb = this.field[i][j].isBomb;
-         if (cellIsBomb) open_cell.call(this, i, j);
-      }
-   }
+   this.isOver = true;
 
-   alert("Game is over!");
+   this.locking();
+   this.show_all_bombs();
+
+   // alert("Game is over!");
+   this.onGameOver();
 
    return false;
 };
 
 // Function for a  =|-> Game Win <-|=
 Minesweeper.prototype.gameWin = function () {
-   alert("Congratulations, you really are a sapper!");
+   this.isEnded = true;
+   this.locking();
+
+   // alert("Congratulations, you really are a sapper!");
+
+   this.onGameWin();
 };
 
 // ==/> Setters Start! </==
@@ -334,17 +390,27 @@ Minesweeper.prototype.isUndefinedCell = function (row_index, column_index) {
 
 // Check if the cell is undefined
 Minesweeper.prototype.isGameWin = function () {
-   let countVisited = 0;
+   let countVisited = 0,
+      noBombsCount = 0;
    for (let i = 1; i <= this.options.rows; ++i) {
       for (let j = 1; j <= this.options.columns; ++j) {
          const isCorrectFlag =
             this.field[i][j].isFlag && this.field[i][j].isBomb;
-         if (this.field[i][j].isVisited || isCorrectFlag) countVisited++;
+         if (this.field[i][j].isVisited || isCorrectFlag)
+            countVisited++;
+         if (this.field[i][j].isVisited && !this.field[i][j].isBomb)
+            noBombsCount++;
       }
    }
 
-   const keepCount = this.options.rows * this.options.columns - countVisited;
-   if (keepCount <= 2) return true;
+   let keepCount = this.options.rows * this.options.columns - noBombsCount;
+   if (keepCount == this.options.bombs) {
+      return true;
+   }
+
+   keepCount = this.options.rows * this.options.columns - countVisited;
+   if (keepCount <= 2)
+      return true;
 
    return false;
 };
@@ -422,7 +488,6 @@ Minesweeper.prototype.click_left = function (row_index, column_index) {
    // if you click a cell with a bomb -> you lose the game
    // (you need to calculate pos)
    if (this.field[row_index][column_index].isBomb) {
-      this.isOver = true;
       this.gameOver();
 
       return;
@@ -461,6 +526,7 @@ Minesweeper.prototype.click_left = function (row_index, column_index) {
       visit_empty_cells.call(this, queue);
 
       this.isStarted = true;
+      this.onGameStart(); // init game start event
    } else {
       // otherwise you click on a good field
       // the state of this cell is visited
@@ -525,5 +591,50 @@ Minesweeper.prototype.getStarted = function () {
    this.set_states();
    return this;
 };
+
+// game refresh function
+Minesweeper.prototype.refresh = function () {
+   // game states, which mean if the game has (started) or (ended)
+   (this.isStarted = false), (this.isOver = false);
+   this.field = [[]]; // init empty field
+
+   this.set_default_styles();
+   this.set_field_size();
+};
+
+// locking clicks at cells
+Minesweeper.prototype.locking = function () {
+   for (let i = 1; i <= this.options.rows; ++i) {
+      for (let j = 1; j <= this.options.columns; ++j) {
+         const cell = find_cell(i, j);
+         cell.style.pointerEvents = "none";
+         cell.tabIndex = "-1";
+      }
+   }
+};
+
+// unlocking clicks at cells
+Minesweeper.prototype.unlocking = function () {
+   for (let i = 1; i <= this.options.rows; ++i) {
+      for (let j = 1; j <= this.options.columns; ++j) {
+         const cell = find_cell(i, j);
+         cell.style.pointerEvents = null;
+         cell.tabIndex = null;
+         const cellIsBomb = this.field[i][j].isBomb;
+         if (cellIsBomb) open_cell.call(this, i, j);
+      }
+   }
+};
+
+// show all bombs on the game field
+Minesweeper.prototype.show_all_bombs = function () {
+   for (let i = 1; i <= this.options.rows; ++i) {
+      for (let j = 1; j <= this.options.columns; ++j) {
+         const cellIsBomb = this.field[i][j].isBomb;
+         if (cellIsBomb) open_cell.call(this, i, j);
+      }
+   }
+};
+
 // =============================
 // ==/>  Game Methods End!  </==

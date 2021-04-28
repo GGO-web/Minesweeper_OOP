@@ -75,7 +75,9 @@ button.focus-visible, a.focus-visible, input.focus-visible {
 }
 
 .site-container {
-  overflow: hidden;
+   overflow: hidden;
+   position: relative;
+   min-height: 500px;
 }
 
 .is-hidden {
@@ -118,6 +120,7 @@ body {
    font-size: 16px;
    line-height: 1.2;
    font-weight: 400;
+   font-display: swap;
    color: #000;
    margin: 0;
    background-color: #fff;

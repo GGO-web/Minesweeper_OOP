@@ -1,2 +1,139 @@
 .header {
+   position: fixed;
+   top: 0;
+   left: 0;
+   right: 0;
+   z-index: 10;
+   min-height: 70px;
+   padding: 10px 0;
+   background-color: var(--color-light-primary);
+   box-shadow: 0 0 5px var(--shadow-color);
+   &__inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+   }
+}
+
+.logo {
+   @include responsiveP(flex-basis, 40, 30, 768, 576);
+   display: flex;
+   flex: 0 0 40px;
+   align-items: center;
+   font-weight: 500;
+   span {
+      font-size: 20px;
+      color: var(--color-white);
+      margin-left: 10px;
+   }
+   @media (max-width: 576px) {
+      flex-basis: 30px;
+   }
+}
+
+.options {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   &__list {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+   }
+   &__item:not(:last-child) {
+      margin-right: 15px;
+   }
+   &__button {
+      @include responsiveP(flex-basis, 40, 30, 768, 576);
+      @include responsiveP(width, 40, 30, 768, 576);
+      @include responsiveP(height, 40, 30, 768, 576);
+      flex: 0 0 40px;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      padding: 0;
+      transition: transform 0.4s ease-in-out;
+      &-line {
+         position: relative;
+         display: inline-block;
+         width: 100%;
+         height: 3px;
+         border-radius: 20px;
+         background-color: var(--color-white);
+         &::before {
+            @include responsiveP(width, 10, 8, 768, 576);
+            @include responsiveP(height, 10, 8, 768, 576);
+            content: "";
+            position: absolute;
+            top: 50%;
+            display: inline-block;
+            border: 3px solid var(--color-white);
+            border-radius: 100%;
+            transform: translateY(-50%);
+            background-color: var(--color-light-primary);
+            transition-property: left, right;
+            transition-duration: 0.3s, 0.3s;
+            transition-timing-function: ease-in-out, ease-in-out;
+         }
+         &:nth-child(1)::before {
+            right: 5px;
+         }
+         &:nth-child(2)::before {
+            left: 5px;
+         }
+         &:nth-child(3)::before {
+            right: 5px;
+         }
+      }
+      &--refresh {
+         // background-image: url("../img/refresh.svg");
+         &:hover {
+            transform: rotate(-180deg);
+         }
+      }
+      &--settings {
+         padding: 5px 0;
+         display: flex;
+         flex-direction: column;
+         justify-content: space-between;
+         &:hover .options__button-line {
+            &:nth-child(1)::before {
+               right: calc(100% - 15px);
+            }
+            &:nth-child(2)::before {
+               left: calc(100% - 15px);
+            }
+            &:nth-child(3)::before {
+               right: calc(100% - 15px);
+            }
+         }
+      }
+   }
+}
+
+.timer {
+   @include responsiveP(font-size, 24, 18, 768, 320);
+   display: flex;
+   justify-content: center;
+   color: var(--color-light-back);
+   margin: 0 10px;
+   padding: 0 20px;
+   border-right: 1px dashed var(--color-light-back);
+   border-left: 1px dashed var(--color-light-back);
+   @media (max-width: 480px) {
+      padding: 0 10px;
+   }
+}
+
+.site-container.has-overlay::before {
+   content: "";
+   position: absolute;
+   z-index: 2;
+   top: 0;
+   left: 0;
+   opacity: 0.7;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(var(--color-white), 0.7);
+
 }
