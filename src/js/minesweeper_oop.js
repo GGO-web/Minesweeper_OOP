@@ -111,7 +111,7 @@ class Minesweeper {
          return false;
       });
 
-      // mobile set the flag events
+      // mobile set the flag event
       (() => {
          let touchStartTimeStamp = 0,
             touchEndTimeStamp = 0;
@@ -122,7 +122,10 @@ class Minesweeper {
             touchEndTimeStamp = event.timeStamp;
             let longTouchInterval = touchEndTimeStamp - touchStartTimeStamp;
 
-            this.game.removeEventListener("mousedown");
+            // Not remove event mousedown listener for apple devices
+            if (!/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+               this.game.removeEventListener("mousedown");
+            }
 
             const waitingTime = 300; // in ms
             if (longTouchInterval >= waitingTime) {
@@ -143,7 +146,6 @@ class Minesweeper {
             }
          });
       })(this);
-
 
       // listeners for wheel-click (open the cells around clicked cell if possible)
       this.game.addEventListener("mousedown", (event) => {
