@@ -167,6 +167,10 @@ rangeSliders.forEach((rangeSlider) => {
 
 // game events example
 window.addEventListener("MS_GameRefresh", function () {
+   if (GameWinModal.classList.contains("is-showed"))
+      toggleGameWinModal();
+   if (GameOverModal.classList.contains("is-showed"))
+      toggleGameOverModal();
    timer.clear();
 });
 

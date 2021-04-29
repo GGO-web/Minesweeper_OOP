@@ -1,9 +1,9 @@
+const GameWinModal = document.querySelector(".game-win");
+const GameOverModal = document.querySelector(".game-over");
 const toggleGameWinModal = () => {
-   const GameWinModal = document.querySelector(".game-win");
    GameWinModal.classList.toggle("is-showed");
 };
 const toggleGameOverModal = () => {
-   const GameOverModal = document.querySelector(".game-over");
    GameOverModal.classList.toggle("is-showed");
 };
 
