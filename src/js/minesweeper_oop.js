@@ -122,6 +122,8 @@ class Minesweeper {
             touchEndTimeStamp = event.timeStamp;
             let longTouchInterval = touchEndTimeStamp - touchStartTimeStamp;
 
+            this.game.removeEventListener("mousedown");
+
             const waitingTime = 300; // in ms
             if (longTouchInterval >= waitingTime) {
                const targetCell = event.target;
