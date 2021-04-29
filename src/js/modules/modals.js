@@ -6,6 +6,10 @@ const toggleGameWinModal = () => {
 const toggleGameOverModal = () => {
    GameOverModal.classList.toggle("is-showed");
 };
+const closeModals = () => {
+   GameWinModal.classList.remove("is-showed");
+   GameOverModal.classList.remove("is-showed");
+}
 
 const GameWinButton = document.querySelector(".game-win__button");
 GameWinButton.addEventListener("click", function (event) {
