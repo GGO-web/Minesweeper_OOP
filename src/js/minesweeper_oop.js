@@ -629,7 +629,7 @@ Minesweeper.prototype.getStarted = function () {
 // game refresh function
 Minesweeper.prototype.refresh = function () {
    // game states, which mean if the game has (started) or (ended)
-   (this.isStarted = false), (this.isOver = false);
+   (this.isStarted = false), (this.isEnded = false), (this.isOver = false);
    this.field = [[]]; // init empty field
 
    this.set_default_styles();
