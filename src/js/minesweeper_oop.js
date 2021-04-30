@@ -33,14 +33,8 @@ class Minesweeper {
 
       this.set_default_styles = () => {
          this.game.classList.add("minesweeper-field");
-         document.documentElement.style.setProperty(
-            "--columns-count",
-            this.options.columns
-         );
-         document.documentElement.style.setProperty(
-            "--rows-count",
-            this.options.rows
-         );
+         this.game.style.setProperty("--columns-count", this.options.columns);
+         this.game.style.setProperty("--rows-count", this.options.rows);
       };
       // for a start generating an easy level
       this.set_default_styles();
