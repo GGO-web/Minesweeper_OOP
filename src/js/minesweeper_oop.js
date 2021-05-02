@@ -105,42 +105,6 @@ class Minesweeper {
          return false;
       });
 
-      // mobile set the flag event
-      (() => {
-         let touchStartTimeStamp = 0,
-            touchEndTimeStamp = 0;
-         this.game.addEventListener("touchstart", (event) => {
-            touchStartTimeStamp = event.timeStamp;
-         });
-         this.game.addEventListener("touchend", (event) => {
-            touchEndTimeStamp = event.timeStamp;
-            let longTouchInterval = touchEndTimeStamp - touchStartTimeStamp;
-
-            // Not remove event mousedown listener for apple devices
-            if (!/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-               this.game.removeEventListener("mousedown");
-            }
-
-            const waitingTime = 300; // in ms
-            if (longTouchInterval >= waitingTime) {
-               const targetCell = event.target;
-               // check if clicked in the field cell
-               if (
-                  targetCell &&
-                  targetCell.classList.contains(this.options.fieldCell)
-               ) {
-                  const [row, column] = [
-                     ...targetCell.dataset.cell
-                        .split(" ")
-                        .map((e) => parseInt(e)),
-                  ];
-                  this.click_right(row, column);
-               }
-               return false;
-            }
-         });
-      })(this);
-
       // listeners for wheel-click (open the cells around clicked cell if possible)
       this.game.addEventListener("mousedown", (event) => {
          event.preventDefault();
@@ -169,6 +133,41 @@ class Minesweeper {
 
          return false;
       });
+
+      // Add touch event listener for apple devices
+      if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+         // mobile set the flag event
+         let touchStartTimeStamp = 0,
+            touchEndTimeStamp = 0;
+         this.game.addEventListener("touchstart", (event) => {
+            touchStartTimeStamp = event.timeStamp;
+         });
+         this.game.addEventListener("touchend", (event) => {
+            touchEndTimeStamp = event.timeStamp;
+            let longTouchInterval = touchEndTimeStamp - touchStartTimeStamp;
+
+
+
+            const waitingTime = 300; // in ms
+            if (longTouchInterval >= waitingTime) {
+               const targetCell = event.target;
+               // check if clicked in the field cell
+               if (
+                  targetCell &&
+                  targetCell.classList.contains(this.options.fieldCell)
+               ) {
+                  const [row, column] = [
+                     ...targetCell.dataset.cell
+                        .split(" ")
+                        .map((e) => parseInt(e)),
+                  ];
+                  this.click_right(row, column);
+               }
+               return false;
+            }
+         });
+      }
+
       // listeners for mobile double click (open the cells around clicked cell if possible)
       this.game.addEventListener("dblclick", (event) => {
          event.preventDefault();
@@ -188,11 +187,12 @@ class Minesweeper {
       });
 
       // refresh game listener
-      if (this.refreshButton)
+      if (this.refreshButton) {
          this.refreshButton.addEventListener("click", () => {
             this.refresh();
             this.onGameRefresh();
          });
+      }
 
       // ================================
       // ==/>  Event Listeners End!  </==
@@ -420,25 +420,19 @@ Minesweeper.prototype.isUndefinedCell = function (row_index, column_index) {
 
 // Check if the cell is undefined
 Minesweeper.prototype.isGameWin = function () {
-   let countVisited = 0,
-      noBombsCount = 0;
+   let countVisited = 0;
+
    for (let i = 1; i <= this.options.rows; ++i) {
       for (let j = 1; j <= this.options.columns; ++j) {
-         const isCorrectFlag =
-            this.field[i][j].isFlag && this.field[i][j].isBomb;
-         if (this.field[i][j].isVisited || isCorrectFlag) countVisited++;
-         if (this.field[i][j].isVisited && !this.field[i][j].isBomb)
-            noBombsCount++;
+         const isCorrectFlag = this.field[i][j].isFlag && this.field[i][j].isBomb;
+         if (this.field[i][j].isVisited || isCorrectFlag)
+            countVisited++;
       }
    }
 
-   let keepCount = this.options.rows * this.options.columns - noBombsCount;
-   if (keepCount == this.options.bombs) {
+   let keepCount = this.options.rows * this.options.columns - countVisited;
+   if (!keepCount)
       return true;
-   }
-
-   keepCount = this.options.rows * this.options.columns - countVisited;
-   if (keepCount <= 2) return true;
 
    return false;
 };

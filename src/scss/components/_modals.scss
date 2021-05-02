@@ -3,7 +3,7 @@
    visibility: hidden;
    position: fixed;
    z-index: 2;
-   top: 50%;
+   top: calc(max(50vh, 200px));
    left: 50%;
    width: 500px;
    max-width: calc(100% - 20px);
@@ -11,11 +11,15 @@
    color: var(--color-primary);
    text-align: right;
    padding: 20px;
-   border-radius: 20px;
+   border-radius: 85% 15% 85% 15% / 0% 100% 0% 100%;
+   border-top-left-radius: 30px;
+   border-bottom-right-radius: 30px;
+   box-shadow: 0 0 20px var(--color-shadow-light);
    transition: visibility 0.5s ease-in-out,
                transform 0.5s ease-in-out;
    transform: translate(-50%, -50%) scale(0);
    background-color: var(--color-light-back);
+
    &__title {
       color: var(--color-secondary);
       text-align: center;

@@ -5,7 +5,6 @@ const game = new Minesweeper(".field", {
    refreshButton: ".options__button--refresh",
 });
 
-
 // timer class
 class Timer {
    constructor() {
@@ -49,17 +48,22 @@ class Timer {
 
 const timer = new Timer();
 
-
 // range sliders options
 const rangeSliders = document.querySelectorAll(".settings__option-slider");
-const rangeRowsSlider = document.querySelector(".settings__option-slider--rows");
-const rangeColumnsSlider = document.querySelector(".settings__option-slider--columns");
-const rangeBombsSlider = document.querySelector(".settings__option-slider--bombs");
+const rangeRowsSlider = document.querySelector(
+   ".settings__option-slider--rows"
+);
+const rangeColumnsSlider = document.querySelector(
+   ".settings__option-slider--columns"
+);
+const rangeBombsSlider = document.querySelector(
+   ".settings__option-slider--bombs"
+);
 
 // maximum bombs count for this field size
 const bombsMaxCount = () => {
    return (game.options.columns - 1) * (game.options.rows - 1);
-}
+};
 
 noUiSlider.create(rangeRowsSlider, {
    start: 9,
@@ -165,7 +169,6 @@ rangeSliders.forEach((rangeSlider) => {
       previousValue = currentValue;
    });
 });
-
 
 // game events example
 window.addEventListener("MS_GameRefresh", function () {
