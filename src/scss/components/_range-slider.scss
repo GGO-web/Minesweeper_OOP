@@ -1,35 +1,23 @@
 .noUi-target {
+   cursor: pointer;
    box-shadow: none;
-   width: calc(80% - 25px);
-   min-width: 150px;
-	height: 3px;
+   max-width: 400px;
+   min-width: 75px;
+	height: 6px;
 	border: none;
 	border-radius: 30px;
-   transform: translateX(12.5px);
+   margin-left: 12.5px;
 	background-color: var(--color-light-back);
-   &::before {
-      content: '';
-      position: absolute;
-      left: 6px;
-      width: calc(100% + 19px);
-      height: 3px;
-      transform: translateX(-12.5px);
-      background-color: var(--color-light-back);
-   }
 }
 
 .noUi-connect {
-	background-color: var(--color-primary);
+	background-color: var(--color-shadow-light);
+   background: linear-gradient(90deg, var(--color-shadow-light) 0%, var(--color-white) 100%);
 }
 
 .noUi-handle::after,
 .noUi-handle::before {
 	display: none;
-}
-
-.noUi-horizontal .noUi-origin {
-   // right: 2*border-width(if it exist)
-   right: 5;
 }
 
 .noUi-handle {
@@ -51,9 +39,11 @@
 
 .noUi-horizontal .noUi-handle {
    top: 0;
+   right: -12.5px;
 	width: 25px;
 	height: 25px;
-	transform: translateY(-50%);
+   // move up by half of the height and half of range slider height
+	transform: translateY(calc(-50% + 3px));
 }
 .noUi-tooltip {
     position: absolute;
@@ -61,6 +51,7 @@
     background: var(--color-light-back);
     color: var(--color-light-primary);
     text-align: center;
-    padding: 3px 7px;
-    border-radius: 5px;
+    padding: 1px 7px 3px;
+    border-bottom: 0;
+    border-radius: 10px 10px 100% 100%;
 }

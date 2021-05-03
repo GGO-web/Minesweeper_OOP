@@ -67,12 +67,13 @@ const bombsMaxCount = () => {
 
 noUiSlider.create(rangeRowsSlider, {
    start: 9,
+   connect: "lower",
    range: {
       min: [9],
       max: [30],
    },
    step: 1,
-   tooltips: true,
+   tooltips: false,
    format: {
       // 'to' the formatted value. Receives a number.
       to: function (value) {
@@ -84,16 +85,16 @@ noUiSlider.create(rangeRowsSlider, {
          return value;
       },
    },
-   connect: true,
 });
 noUiSlider.create(rangeColumnsSlider, {
    start: 9,
+   connect: "lower",
    range: {
       min: [9],
       max: [15],
    },
    step: 1,
-   tooltips: true,
+   tooltips: false,
    format: {
       // 'to' the formatted value. Receives a number.
       to: function (value) {
@@ -105,16 +106,16 @@ noUiSlider.create(rangeColumnsSlider, {
          return value;
       },
    },
-   connect: true,
 });
 noUiSlider.create(rangeBombsSlider, {
    start: 10,
+   connect: "lower",
    range: {
       min: 10,
       max: bombsMaxCount(),
    },
    step: 1,
-   tooltips: true,
+   tooltips: false,
    format: {
       // 'to' the formatted value. Receives a number.
       to: function (value) {
@@ -126,7 +127,6 @@ noUiSlider.create(rangeBombsSlider, {
          return value;
       },
    },
-   connect: true,
 });
 
 const setGameSettings = () => {
@@ -142,22 +142,18 @@ const setGameSettings = () => {
          max: bombsMaxCount(),
       },
    });
-   rangeBombsSlider.querySelector(".noUi-tooltip").style.display = "none";
 };
 
 rangeSliders.forEach((rangeSlider) => {
-   let noUiTooltip = rangeSlider.querySelector(".noUi-tooltip");
-   noUiTooltip.style.display = "none";
+   const sliderValue = rangeSlider.parentElement.querySelector(".settings__slider-value");
 
    rangeSlider.noUiSlider.on("slide", function () {
-      noUiTooltip.style.display = null;
-      rangeSlider.noUiSlider.tooltips = true;
+      sliderValue.innerText = rangeSlider.noUiSlider.get();
    });
 
    let previousValue = rangeSlider.noUiSlider.get();
    rangeSlider.noUiSlider.on("change", function () {
-      noUiTooltip = rangeSlider.querySelector(".noUi-tooltip");
-      noUiTooltip.style.display = "none";
+      sliderValue.innerHTML = rangeSlider.noUiSlider.get();
 
       const currentValue = rangeSlider.noUiSlider.get();
       if (previousValue != currentValue) {

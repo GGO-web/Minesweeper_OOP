@@ -45,8 +45,11 @@
       visibility: visible;
       transform: translate(-50%, -50%) scale(1);
    }
-   @media (max-width: 320px) {
+   @media (max-width: 380px) {
       padding: 10px;
+      border-radius: 95% 5% 95% 5% / 0% 100% 0% 100%;
+      border-top-left-radius: 20px;
+      border-bottom-right-radius: 20px;
    }
 }
 
