@@ -146,8 +146,6 @@ class Minesweeper {
             touchEndTimeStamp = event.timeStamp;
             let longTouchInterval = touchEndTimeStamp - touchStartTimeStamp;
 
-
-
             const waitingTime = 300; // in ms
             if (longTouchInterval >= waitingTime) {
                const targetCell = event.target;
@@ -271,7 +269,8 @@ function visit_empty_cells(queue) {
          for (let j = -1; j <= 1; ++j) {
             if (
                this.isUndefinedCell(row_index + i, column_index + j) ||
-               this.field[row_index + i][column_index + j].isVisited
+               this.field[row_index + i][column_index + j].isVisited ||
+               this.field[row_index + i][column_index + j].isFlag
             )
                continue;
 
@@ -424,15 +423,14 @@ Minesweeper.prototype.isGameWin = function () {
 
    for (let i = 1; i <= this.options.rows; ++i) {
       for (let j = 1; j <= this.options.columns; ++j) {
-         const isCorrectFlag = this.field[i][j].isFlag && this.field[i][j].isBomb;
-         if (this.field[i][j].isVisited || isCorrectFlag)
-            countVisited++;
+         const isCorrectFlag =
+            this.field[i][j].isFlag && this.field[i][j].isBomb;
+         if (this.field[i][j].isVisited || isCorrectFlag) countVisited++;
       }
    }
 
    let keepCount = this.options.rows * this.options.columns - countVisited;
-   if (!keepCount)
-      return true;
+   if (!keepCount) return true;
 
    return false;
 };
@@ -532,7 +530,11 @@ Minesweeper.prototype.click_left = function (row_index, column_index) {
       const queue = new Array();
       for (let i = -1; i <= 1; ++i) {
          for (let j = -1; j <= 1; ++j) {
-            if (this.isUndefinedCell(row_index + i, column_index + j)) continue;
+            if (this.isUndefinedCell(row_index + i, column_index + j) ||
+                this.field[row_index + i][column_index + j].isFlag)
+            {
+                  continue;
+            }
             if (
                !this.field[row_index + i][column_index + j].isVisited &&
                this.field[row_index + i][column_index + j].value == 0
@@ -544,7 +546,6 @@ Minesweeper.prototype.click_left = function (row_index, column_index) {
             }
          }
       }
-
       visit_empty_cells.call(this, queue);
 
       this.isStarted = true;
